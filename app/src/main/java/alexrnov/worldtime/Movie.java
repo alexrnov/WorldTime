@@ -11,9 +11,13 @@ class Movie {
   @SerializedName("image")
   private String imageUrl;
 
-  public Movie(String title, String imageUrl) {
+  @SerializedName("id")
+  private Integer id;
+
+  public Movie(String title, String imageUrl, Integer id) {
     this.title = title;
     this.imageUrl = imageUrl;
+    this.id = id;
   }
 
   public String getTitle() {
@@ -24,6 +28,14 @@ class Movie {
     this.title = title;
   }
 
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
   public String getImageUrl() {
     return imageUrl;
   }
@@ -31,4 +43,6 @@ class Movie {
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
   }
+
+
 }

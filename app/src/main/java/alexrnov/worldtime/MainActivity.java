@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i("P", "response success = " + response.body());
         List<Movie> list = response.body();
         for (Movie movie: list) {
-          Log.i("P", "url = " + movie.getImageUrl() + ", title = " + movie.getTitle());
+          Log.i("P", "url = " + movie.getImageUrl() +
+                  ", title = " + movie.getTitle() + ", id = " + movie.getId());
         }
       }
 
