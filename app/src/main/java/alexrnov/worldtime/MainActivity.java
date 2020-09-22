@@ -52,6 +52,32 @@ public class MainActivity extends AppCompatActivity {
         Log.i("P","Response failure= "+t.toString());
       }
     });
+
+
+
+    TimeApiInterface timeApiService = TimeApiClient.getClient().create(TimeApiInterface.class);
+    Call<Time> timeCall = timeApiService.getTime();
+
+    timeCall.enqueue(new Callback<Time>() {
+      @Override
+      public void onResponse(Call<Time> call, Response<Time> response) {
+        Log.i("P", "response success = " + response.body());
+        Time list = response.body();
+        String v = list.getDateTime();
+        Log.i("P", "response success = " + v);
+      }
+
+      @Override
+      public void onFailure(Call<Time> call, Throwable t) {
+        Log.i("P","Response failure= "+t.toString());
+      }
+    });
+
+
+
+
   }
+
+
 
 }
