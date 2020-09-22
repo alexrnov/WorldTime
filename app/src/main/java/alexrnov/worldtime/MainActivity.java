@@ -56,12 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     TimeApiInterface timeApiService = TimeApiClient.getClient().create(TimeApiInterface.class);
-    Call<Time> timeCall = timeApiService.getTime();
+    Call<Time> timeCall = timeApiService.getTime("America/Whitehorse.json");
 
     timeCall.enqueue(new Callback<Time>() {
       @Override
       public void onResponse(Call<Time> call, Response<Time> response) {
-        Log.i("P", "response success = " + response.body());
         Time list = response.body();
         String v = list.getDateTime();
         Log.i("P", "response success = " + v);
@@ -74,8 +73,21 @@ public class MainActivity extends AppCompatActivity {
     });
 
 
+    timeCall = timeApiService.getTime("Pacific/Majuro.json");
 
+    timeCall.enqueue(new Callback<Time>() {
+      @Override
+      public void onResponse(Call<Time> call, Response<Time> response) {
+        Time list = response.body();
+        String v = list.getDateTime();
+        Log.i("P", "response success = " + v);
+      }
 
+      @Override
+      public void onFailure(Call<Time> call, Throwable t) {
+        Log.i("P","Response failure= "+t.toString());
+      }
+    });
   }
 
 

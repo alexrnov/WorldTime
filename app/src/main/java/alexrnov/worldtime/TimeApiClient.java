@@ -6,6 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 class TimeApiClient {
 
   public static String BASE_URL ="http://worldtimeapi.org/api/timezone/";
+
   private static Retrofit retrofit;
   public static Retrofit getClient() {
     if (retrofit == null) {
