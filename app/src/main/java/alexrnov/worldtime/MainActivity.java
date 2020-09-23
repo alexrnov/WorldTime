@@ -5,18 +5,34 @@ import android.util.Log;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+import java.util.Scanner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import okhttp3.Headers;
+
+import okhttp3.OkHttpClient;
+//import okhttp3.Callback;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+  private final OkHttpClient client = new OkHttpClient();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +104,36 @@ public class MainActivity extends AppCompatActivity {
         Log.i("P","Response failure= "+t.toString());
       }
     });
+
+
+    Request request = new Request.Builder()
+            //.url("http://worldtimeapi.org/api/timezone.txt")
+            .url("http://worldtimeapi.org/api/timezone.json")
+            .build();
+
+    client.newCall(request).enqueue(
+            new okhttp3.Callback() {
+              @Override
+              public void onResponse(@NotNull okhttp3.Call call,
+                                     @NotNull okhttp3.Response response) throws IOException {
+                String str = response.body().string();
+
+                JSONArray jsonarray;
+                try {
+                  jsonarray = new JSONArray(str);
+                  for (int i = 0; i < jsonarray.length(); i++) {
+                    Object jsonArray = jsonarray.get(i);
+                    Log.i("P", "time zone = " + jsonArray.toString());
+                  }
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
+              }
+
+              @Override
+              public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+
+              }
+    });
   }
-
-
-
 }
