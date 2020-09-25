@@ -1,6 +1,7 @@
 package alexrnov.worldtime;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import java.util.Scanner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -42,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
   private final OkHttpClient client = new OkHttpClient();
 
   private FusedLocationProviderClient fusedLocationClient;
-
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -148,22 +149,22 @@ public class MainActivity extends AppCompatActivity {
 
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+    if (ActivityCompat.checkSelfPermission(this,
+            android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      //Toast.makeText(YourService.this, "First enable LOCATION ACCESS in settings.", Toast.LENGTH_LONG).show();
 
-    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      // Consider calling
-      //    ActivityCompat#requestPermissions
-      // here to request the missing permissions, and then overriding
-      //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-      //                                          int[] grantResults)
-      // to handle the case where the user grants the permission. See the documentation
-      // for ActivityCompat#requestPermissions for more details.
-      return;
+      ActivityCompat.requestPermissions(
+              this,
+              new String [] { android.Manifest.permission.ACCESS_COARSE_LOCATION },
+              1);
     }
 
     fusedLocationClient.getLastLocation()
             .addOnSuccessListener(this, new OnSuccessListener<Location>() {
               @Override
               public void onSuccess(Location location) {
+                Log.i("P", "location onSuccess");
                 // Got last known location. In some rare situations this can be null.
                 if (location != null) {
                   // Logic to handle location object
