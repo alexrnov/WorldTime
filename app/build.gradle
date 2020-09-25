@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
@@ -44,9 +45,11 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.3.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
-
     implementation 'com.squareup.retrofit2:retrofit:2.9.0' // retrofit version
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0' //  GSON converter from retrofit
+
+    // to determine the location
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -56,6 +59,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 }
+
 repositories {
     mavenCentral()
 }

@@ -2,9 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="alexrnov.worldtime">
 
+    <!-- for access to internet, - for retrofit -->
     <uses-permission android:name="android.permission.INTERNET"/>
-
-
+    <!-- to request foreground location access, declare one of these permissions. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +25,11 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".PositionService" />
+        <!-- Recommended for Android 9 (API level 28) and lower. -->
+        <!-- Required for Android 10 (API level 29) and higher. -->
+        <service
+            android:name=".PositionService"
+            android:foregroundServiceType="location" />
 
     </application>
 
