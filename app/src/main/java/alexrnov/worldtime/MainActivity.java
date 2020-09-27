@@ -1,11 +1,15 @@
 package alexrnov.worldtime;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -15,22 +19,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-import java.util.Scanner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import okhttp3.Headers;
 
 import okhttp3.OkHttpClient;
 //import okhttp3.Callback;
@@ -39,16 +37,51 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+import alexrnov.worldtime.PositionService.LocalBinder;
+
 public class MainActivity extends AppCompatActivity {
 
   private final OkHttpClient client = new OkHttpClient();
-
   private FusedLocationProviderClient fusedLocationClient;
+
+  private PositionService positionService;
+
+  boolean mBound = false;
+
+  //определяет обратный вызов для связанной службы, передаваемый в bindService()
+  private ServiceConnection mConnection = new ServiceConnection() {
+
+    /*
+     * Система вызывает этот метод, чтобы выдать объект IBinder, возвращенный
+     * методом onBind() службы.
+     */
+    @Override
+    public void onServiceConnected(ComponentName className, IBinder service) {
+      Log.i("P", "onServiceConnected init");
+      //мы получаем связь с Service3, преобразуем интерфейс IBinder в LocalBinder
+      //и получаем экземпляр Service3
+      LocalBinder binder = (LocalBinder) service;
+      positionService = binder.getService();
+      mBound = true;
+    }
+
+    /*
+     * Система Android вызывает этот метод в случае непредвиденной потери
+     * подключения к службе, например при сбое в работе службы или в случае
+     * ее завершения. Этот метод не вызывается, когда клиент отменяет привязку
+     */
+    @Override
+    public void onServiceDisconnected(ComponentName arg0) {
+      mBound = false;
+    }
+  };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    Log.i("P", "onCreate() method");
     BottomNavigationView navView = findViewById(R.id.nav_view);
     // Passing each menu ID as a set of Ids because each
     // menu should be considered as top level destinations.
@@ -154,10 +187,13 @@ public class MainActivity extends AppCompatActivity {
             && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       //Toast.makeText(YourService.this, "First enable LOCATION ACCESS in settings.", Toast.LENGTH_LONG).show();
 
+
       ActivityCompat.requestPermissions(
               this,
               new String [] { android.Manifest.permission.ACCESS_COARSE_LOCATION },
               1);
+
+
     }
 
     fusedLocationClient.getLastLocation()
@@ -174,6 +210,56 @@ public class MainActivity extends AppCompatActivity {
                 }
               }
             });
-
   }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    Log.i("P", "onResume() method");
+    if (mBound) {
+      Log.i("P", "mBound = " + true);
+      //вызывается public-метод связанной службы. Однако если c этим вызовом
+      //было что-то, что могло привести к зависанию(длительной работы метода),
+      //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
+      //снижения производительности активити-класса
+      int i = positionService.getRandomNumber();
+      Log.i("P", "i = " + i);
+    } else {
+      Log.i("P", "mBound = " + false);
+    }
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    Log.i("P", "onStart() method");
+    Intent intent = new Intent(this, PositionService.class);
+    //BIND_AUTO_CREATE - параметр привязки: создать службу если она еще не выполняется
+    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    //открепиться от сервиса
+    if (mBound) {
+      unbindService(mConnection);
+      mBound = false;
+    }
+  }
+
+  public void onButtonClick(View v) {
+    if (mBound) {
+      Log.i("P", "mBound = " + true);
+      //вызывается public-метод связанной службы. Однако если c этим вызовом
+      //было что-то, что могло привести к зависанию(длительной работы метода),
+      //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
+      //снижения производительности активити-класса
+      int i = positionService.getRandomNumber();
+      Log.i("P", "i = " + i);
+    } else {
+      Log.i("P", "mBound = " + false);
+    }
+  }
+
 }
