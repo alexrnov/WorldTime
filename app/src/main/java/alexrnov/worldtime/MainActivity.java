@@ -64,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
       LocalBinder binder = (LocalBinder) service;
       positionService = binder.getService();
       mBound = true;
+      //вызывается public-метод связанной службы. Однако если c этим вызовом
+      //было что-то, что могло привести к зависанию(длительной работы метода),
+      //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
+      //снижения производительности активити-класса
+      Log.i("P", "positionService = " + positionService.getRandomNumber());
     }
 
     /*
@@ -213,26 +218,10 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onResume() {
-    super.onResume();
-    Log.i("P", "onResume() method");
-    if (mBound) {
-      Log.i("P", "mBound = " + true);
-      //вызывается public-метод связанной службы. Однако если c этим вызовом
-      //было что-то, что могло привести к зависанию(длительной работы метода),
-      //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
-      //снижения производительности активити-класса
-      int i = positionService.getRandomNumber();
-      Log.i("P", "i = " + i);
-    } else {
-      Log.i("P", "mBound = " + false);
-    }
-  }
-
-  @Override
   protected void onStart() {
     super.onStart();
     Log.i("P", "onStart() method");
+
     Intent intent = new Intent(this, PositionService.class);
     //BIND_AUTO_CREATE - параметр привязки: создать службу если она еще не выполняется
     bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -247,19 +236,4 @@ public class MainActivity extends AppCompatActivity {
       mBound = false;
     }
   }
-
-  public void onButtonClick(View v) {
-    if (mBound) {
-      Log.i("P", "mBound = " + true);
-      //вызывается public-метод связанной службы. Однако если c этим вызовом
-      //было что-то, что могло привести к зависанию(длительной работы метода),
-      //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
-      //снижения производительности активити-класса
-      int i = positionService.getRandomNumber();
-      Log.i("P", "i = " + i);
-    } else {
-      Log.i("P", "mBound = " + false);
-    }
-  }
-
 }
