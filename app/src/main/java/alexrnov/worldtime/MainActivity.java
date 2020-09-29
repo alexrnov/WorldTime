@@ -43,7 +43,7 @@ import alexrnov.worldtime.PositionService.LocalBinder;
 public class MainActivity extends AppCompatActivity {
 
   private final OkHttpClient client = new OkHttpClient();
-  private FusedLocationProviderClient fusedLocationClient;
+  //private FusedLocationProviderClient fusedLocationClient;
 
   private PositionService positionService;
 
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
               }
             });
 
-
+    /*
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
     if (ActivityCompat.checkSelfPermission(this,
@@ -215,6 +215,8 @@ public class MainActivity extends AppCompatActivity {
                 }
               }
             });
+
+     */
   }
 
   @Override

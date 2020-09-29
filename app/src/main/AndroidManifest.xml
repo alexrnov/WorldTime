@@ -8,6 +8,10 @@
     <!-- for access to internet, - for retrofit -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- Start it in foreground this is required for any app that target Android 9 (API level 28).
+    Otherwise you get a SecurityException. Plus the permission in your manifest -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
