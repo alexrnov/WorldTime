@@ -18,6 +18,9 @@ import java.util.Random;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /** Привязанная служба, на основе использования расширенного класса Binder */
 public class PositionService extends Service {
@@ -25,6 +28,10 @@ public class PositionService extends Service {
   private final IBinder binder = new LocalBinder();
 
   private final Random r = new Random();
+
+  TimeApiInterface timeApiService = TimeApiClient.getClient().create(TimeApiInterface.class);
+
+  String v = "";
 
   /*
    * Класс используется для связи с клиентом. Так как служба всегда
@@ -49,14 +56,35 @@ public class PositionService extends Service {
   }
 
   //метод, который может вызвать клиент
-  public Integer getRandomNumber() {
+  public String getRandomNumber(String path) {
+
+    /*
+    while (true) {
+      Log.i("P", "while = ");
+      if (false) break;
+    }
+    */
+
+
+    Call<Time> timeCall = timeApiService.getTime(path);
+    timeCall.enqueue(new Callback<Time>() {
+      @Override
+      public void onResponse(Call<Time> call, Response<Time> response) {
+        Time list = response.body();
+        v = list.getDateTime();
+        Log.i("P", "service response success = " + v);
+      }
+
+      @Override
+      public void onFailure(Call<Time> call, Throwable t) {
+        Log.i("P", "Response failure= " + t.toString());
+      }
+    });
 
 
 
 
-
-
-    return r.nextInt();
+    return v;
   }
 
 

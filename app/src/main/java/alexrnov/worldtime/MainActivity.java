@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
       //было что-то, что могло привести к зависанию(длительной работы метода),
       //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
       //снижения производительности активити-класса
-      Log.i("P", "positionService = " + positionService.getRandomNumber());
+      Log.i("P", "positionService = " + positionService.getRandomNumber("America/Whitehorse.json"));
     }
 
     /*
@@ -98,26 +98,6 @@ public class MainActivity extends AppCompatActivity {
     NavigationUI.setupWithNavController(navView, navController);
 
 
-    ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-    Call<List<Movie>> call = apiService.getMovies();
-
-    call.enqueue(new Callback<List<Movie>>() {
-      @Override
-      public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
-        Log.i("P", "response success = " + response.body());
-        List<Movie> list = response.body();
-        for (Movie movie : list) {
-          Log.i("P", "url = " + movie.getImageUrl() +
-                  ", title = " + movie.getTitle() + ", id = " + movie.getId());
-        }
-      }
-
-      @Override
-      public void onFailure(Call<List<Movie>> call, Throwable t) {
-        Log.i("P", "Response failure= " + t.toString());
-      }
-    });
-
 
     TimeApiInterface timeApiService = TimeApiClient.getClient().create(TimeApiInterface.class);
     Call<Time> timeCall = timeApiService.getTime("America/Whitehorse.json");
@@ -127,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
       public void onResponse(Call<Time> call, Response<Time> response) {
         Time list = response.body();
         String v = list.getDateTime();
-        Log.i("P", "response success = " + v);
+        Log.i("P", "service response success = " + v);
       }
 
       @Override
