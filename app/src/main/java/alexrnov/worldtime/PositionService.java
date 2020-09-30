@@ -26,9 +26,6 @@ public class PositionService extends Service {
 
   private final Random r = new Random();
 
-  private Activity activity;
-
-  private FusedLocationProviderClient fusedLocationClient;
   /*
    * Класс используется для связи с клиентом. Так как служба всегда
    * запускается в том же самом процессе, что и клиент, нам не нужно
@@ -55,37 +52,6 @@ public class PositionService extends Service {
   public Integer getRandomNumber() {
 
 
-
-    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-    if (ActivityCompat.checkSelfPermission(this,
-            android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      //Toast.makeText(YourService.this, "First enable LOCATION ACCESS in settings.", Toast.LENGTH_LONG).show();
-
-      /*
-      ActivityCompat.requestPermissions(
-              this,
-              new String [] { android.Manifest.permission.ACCESS_COARSE_LOCATION },
-              1);
-      */
-
-    }
-
-    fusedLocationClient.getLastLocation()
-            .addOnSuccessListener(activity, new OnSuccessListener<Location>() {
-              @Override
-              public void onSuccess(Location location) {
-                Log.i("P", "service location onSuccess");
-                // Got last known location. In some rare situations this can be null.
-                if (location != null) {
-                  // Logic to handle location object
-                  Log.i("P", "latitude = " + location.getLatitude()
-                          + "longitude = " + location.getLongitude());
-
-                }
-              }
-            });
 
 
 
