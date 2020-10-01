@@ -85,9 +85,6 @@ public class PositionService extends Service {
   // invoke when services are created by bindService()
   @Override
   public IBinder onBind(Intent intent) {
-    Log.i("P", "onBind()");
-
-
     return binder;
   }
 
