@@ -40,6 +40,9 @@ public class PositionService extends Service {
    */
   public class LocalBinder extends Binder {
 
+    LocalBinder() {
+
+    }
 
     PositionService getService() {
       /*
@@ -48,11 +51,6 @@ public class PositionService extends Service {
        */
       return PositionService.this;
     }
-  }
-
-  @Override
-  public IBinder onBind(Intent intent) {
-    return binder;
   }
 
   //метод, который может вызвать клиент
@@ -81,24 +79,25 @@ public class PositionService extends Service {
       }
     });
 
-
-
-
     return v;
   }
 
+  // invoke when services are created by bindService()
+  @Override
+  public IBinder onBind(Intent intent) {
+    Log.i("P", "onBind()");
 
 
+    return binder;
+  }
+
+  /*
+  // invoke when services are created by startService()
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     super.onStartCommand(intent, flags, startId);
     // If we get killed, after returning from here, restart
     return START_STICKY;
   }
-
-
-
-
-
-
+  */
 }
