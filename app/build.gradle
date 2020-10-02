@@ -46,6 +46,10 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0' // retrofit version
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0' //  GSON converter from retrofit
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.17'
 
     // to determine the location
     implementation 'com.google.android.gms:play-services-location:17.1.0'
