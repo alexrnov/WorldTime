@@ -63,7 +63,7 @@ public class PositionService extends Service {
     }
     */
 
-
+    /*
     Call<Time> timeCall = timeApiService.getTime(path);
     timeCall.enqueue(new Callback<Time>() {
       @Override
@@ -78,7 +78,7 @@ public class PositionService extends Service {
         Log.i("P", "Response failure= " + t.toString());
       }
     });
-
+    */
     return v;
   }
 

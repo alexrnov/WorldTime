@@ -30,6 +30,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 //import okhttp3.Callback;
 import okhttp3.Request;
@@ -39,8 +42,14 @@ import retrofit2.Response;
 
 
 import alexrnov.worldtime.PositionService.LocalBinder;
+import retrofit2.Retrofit;
+import io.reactivex.functions.Consumer;
 
 public class MainActivity extends AppCompatActivity {
+
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+
 
   private final OkHttpClient client = new OkHttpClient();
   private FusedLocationProviderClient fusedLocationClient;
@@ -48,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
   private PositionService positionService;
 
   boolean mBound = false;
+
+  private String sAccept;
 
   //определяет обратный вызов для связанной службы, передаваемый в bindService()
   private ServiceConnection mConnection = new ServiceConnection() {
@@ -100,14 +111,25 @@ public class MainActivity extends AppCompatActivity {
 
 
     TimeApiInterface timeApiService = TimeApiClient.getClient().create(TimeApiInterface.class);
-    Call<Time> timeCall = timeApiService.getTime("America/Whitehorse.json");
+    //Call<Time> timeCall = timeApiService.getTime("America/Whitehorse.json");
 
+
+    compositeDisposable.add(timeApiService.getTime("America/Whitehorse.json")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(postMessage -> {
+              sAccept = postMessage.getDateTime();
+              Log.i("P", "sAccept rx= " + sAccept);
+            }));
+
+    Log.i("P", "sAccept main = " + sAccept);
+    /*
     timeCall.enqueue(new Callback<Time>() {
       @Override
       public void onResponse(Call<Time> call, Response<Time> response) {
         Time list = response.body();
         String v = list.getDateTime();
-        Log.i("P", "service response success = " + v);
+        Log.i("P", "timeCall onResponse = " + v);
       }
 
       @Override
@@ -115,8 +137,9 @@ public class MainActivity extends AppCompatActivity {
         Log.i("P", "Response failure= " + t.toString());
       }
     });
+    */
 
-
+    /*
     timeCall = timeApiService.getTime("Pacific/Majuro.json");
 
     timeCall.enqueue(new Callback<Time>() {
@@ -164,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
               }
             });
 
-
+    */
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
     if (ActivityCompat.checkSelfPermission(this,
