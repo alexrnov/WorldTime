@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-
-
   private final OkHttpClient client = new OkHttpClient();
   private FusedLocationProviderClient fusedLocationClient;
 
@@ -80,12 +78,12 @@ public class MainActivity extends AppCompatActivity {
       //было что-то, что могло привести к зависанию(длительной работы метода),
       //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
       //снижения производительности активити-класса
-      Log.i("P", "positionService = " + positionService.getRandomNumber("America/Whitehorse.json"));
 
-      positionService.obs().subscribeOn(Schedulers.newThread())
+      positionService.getTimeObservable("America/Whitehorse.json")
+              .subscribeOn(Schedulers.newThread())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(time -> {
-                Log.i("P", "obs()=" + time.getDateTime());
+                Log.i("P", "obs() = " + time.getDateTime());
               });
     }
 
@@ -120,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
     TimeApiInterface timeApiService = TimeApiClient.getClient().create(TimeApiInterface.class);
     //Call<Time> timeCall = timeApiService.getTime("America/Whitehorse.json");
 
-
     compositeDisposable.add(timeApiService.getTime("America/Whitehorse.json")
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -129,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
               Log.i("P", "sAccept rx= " + sAccept);
             }));
 
-    Log.i("P", "sAccept main = " + sAccept);
     /*
     timeCall.enqueue(new Callback<Time>() {
       @Override
