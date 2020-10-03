@@ -15,6 +15,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.IOException;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
@@ -30,6 +36,10 @@ import okhttp3.OkHttpClient;
 
 
 import alexrnov.worldtime.TimeService.LocalBinder;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -99,11 +109,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationUI.setupWithNavController(navView, navController);
 
 
-
     TimeApiInterface timeApiService = TimeApiClient.getClientWithRx().create(TimeApiInterface.class);
-    //Call<Time> timeCall = timeApiService.getTime("America/Whitehorse.json");
-
-    compositeDisposable.add(timeApiService.getTime("America/Whitehorse.json")
+    compositeDisposable.add(timeApiService.getTimeWithRx("America/Whitehorse.json")
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(postMessage -> {
@@ -111,7 +118,9 @@ public class MainActivity extends AppCompatActivity {
               Log.i("P", "sAccept rx= " + sAccept);
             }));
 
-    /*
+
+    TimeApiInterface timeApiService2 = TimeApiClient.getClientWithoutRx().create(TimeApiInterface.class);
+    Call<Time> timeCall = timeApiService2.getTimeWithoutRx("Pacific/Majuro.json");
     timeCall.enqueue(new Callback<Time>() {
       @Override
       public void onResponse(Call<Time> call, Response<Time> response) {
@@ -125,24 +134,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("P", "Response failure= " + t.toString());
       }
     });
-    */
 
-    /*
-    timeCall = timeApiService.getTime("Pacific/Majuro.json");
-
-    timeCall.enqueue(new Callback<Time>() {
-      @Override
-      public void onResponse(Call<Time> call, Response<Time> response) {
-        Time list = response.body();
-        String v = list.getDateTime();
-        Log.i("P", "response success = " + v);
-      }
-
-      @Override
-      public void onFailure(Call<Time> call, Throwable t) {
-        Log.i("P", "Response failure= " + t.toString());
-      }
-    });
 
 
     Request request = new Request.Builder()
@@ -175,7 +167,11 @@ public class MainActivity extends AppCompatActivity {
               }
             });
 
-    */
+
+
+
+
+
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
     if (ActivityCompat.checkSelfPermission(this,

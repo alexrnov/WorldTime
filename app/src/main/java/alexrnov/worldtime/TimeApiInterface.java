@@ -10,11 +10,11 @@ interface TimeApiInterface {
   //@GET("America/Whitehorse.json")
   //Call<Time> getTime();
 
-  // when retrofit don't used, then used Call
-  //@GET
-  //Call<Time> getTime(@Url String url);
-
   // when retrofit used, then used Observable
   @GET
-  Observable<Time> getTime(@Url String url);
+  Observable<Time> getTimeWithRx(@Url String url);
+
+  // when retrofit don't used, then used Call
+  @GET
+  Call<Time> getTimeWithoutRx(@Url String url);
 }

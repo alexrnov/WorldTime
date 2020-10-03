@@ -26,7 +26,7 @@ public class TimeService extends Service {
 
   // метод, который может вызвать клиент
   public Observable<Time> getTimeObservable(String path) {
-    return timeApiService.getTime(path);
+    return timeApiService.getTimeWithRx(path);
   }
 
   // invoke when services are created by bindService()
