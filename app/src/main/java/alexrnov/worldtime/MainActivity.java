@@ -9,19 +9,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -30,21 +22,14 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 //import okhttp3.Callback;
-import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
-import alexrnov.worldtime.PositionService.LocalBinder;
-import retrofit2.Retrofit;
-import io.reactivex.functions.Consumer;
+import alexrnov.worldtime.TimeService.LocalBinder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
   private final OkHttpClient client = new OkHttpClient();
   private FusedLocationProviderClient fusedLocationClient;
 
-  private PositionService positionService;
+  private TimeService timeService;
 
   boolean mBound = false;
 
@@ -72,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
       //мы получаем связь с Service3, преобразуем интерфейс IBinder в LocalBinder
       //и получаем экземпляр Service3
       LocalBinder binder = (LocalBinder) service;
-      positionService = binder.getService();
+      timeService = binder.getService();
       mBound = true;
       //вызывается public-метод связанной службы. Однако если c этим вызовом
       //было что-то, что могло привести к зависанию(длительной работы метода),
       //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
       //снижения производительности активити-класса
 
-      positionService.getTimeObservable("America/Whitehorse.json")
+      timeService.getTimeObservable("America/Whitehorse.json")
               .subscribeOn(Schedulers.newThread())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(time -> {
@@ -115,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    TimeApiInterface timeApiService = TimeApiClient.getClient().create(TimeApiInterface.class);
+    TimeApiInterface timeApiService = TimeApiClient.getClientWithRx().create(TimeApiInterface.class);
     //Call<Time> timeCall = timeApiService.getTime("America/Whitehorse.json");
 
     compositeDisposable.add(timeApiService.getTime("America/Whitehorse.json")
@@ -229,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
     super.onStart();
     Log.i("P", "onStart() method");
 
-    Intent intent = new Intent(this, PositionService.class);
+    Intent intent = new Intent(this, TimeService.class);
     //BIND_AUTO_CREATE - параметр привязки: создать службу если она еще не выполняется
     bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
   }

@@ -8,9 +8,9 @@ import android.os.IBinder;
 import io.reactivex.Observable;
 
 /** Привязанная служба, на основе использования расширенного класса Binder */
-public class PositionService extends Service {
+public class TimeService extends Service {
   private final IBinder binder = new LocalBinder();
-  TimeApiInterface timeApiService = TimeApiClient.getClient().create(TimeApiInterface.class);
+  TimeApiInterface timeApiService = TimeApiClient.getClientWithRx().create(TimeApiInterface.class);
 
   /*
    * Класс используется для связи с клиентом. Так как служба всегда
@@ -18,9 +18,9 @@ public class PositionService extends Service {
    * иметь дело с межпроцессорным взаимодействием.
    */
   public class LocalBinder extends Binder {
-    PositionService getService() {
-       // Вернуть экземпляр службы клиенту, который может вызвать его public-методы
-      return PositionService.this;
+    TimeService getService() {
+      // Вернуть экземпляр службы клиенту, который может вызвать его public-методы
+      return TimeService.this;
     }
   }
 
