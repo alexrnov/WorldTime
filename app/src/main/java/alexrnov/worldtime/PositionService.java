@@ -18,6 +18,11 @@ import java.util.Random;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,10 +33,13 @@ public class PositionService extends Service {
   private final IBinder binder = new LocalBinder();
 
   private final Random r = new Random();
-
+  private String sAccept = "";
   TimeApiInterface timeApiService = TimeApiClient.getClient().create(TimeApiInterface.class);
 
   String v = "";
+
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
 
   /*
    * Класс используется для связи с клиентом. Так как служба всегда
@@ -56,6 +64,15 @@ public class PositionService extends Service {
   //метод, который может вызвать клиент
   public String getRandomNumber(String path) {
 
+    compositeDisposable.add(timeApiService.getTime(path)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(postMessage -> {
+              sAccept = postMessage.getDateTime();
+              Log.i("P", "sAccept rx service = " + sAccept);
+            }));
+
+    //Log.i("P", "sAccept rx service2 = " + sAccept);
     /*
     while (true) {
       Log.i("P", "while = ");
@@ -80,6 +97,20 @@ public class PositionService extends Service {
     });
     */
     return v;
+  }
+
+  public Observable<Time> obs() {
+    Observable<Time> observable = timeApiService.getTime("America/Whitehorse.json");
+    return observable;
+    /*
+    return observable.subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(time -> {
+
+            });
+     */
+
+
   }
 
   // invoke when services are created by bindService()

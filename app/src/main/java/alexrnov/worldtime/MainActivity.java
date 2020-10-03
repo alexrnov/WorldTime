@@ -30,6 +30,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -80,6 +81,12 @@ public class MainActivity extends AppCompatActivity {
       //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
       //снижения производительности активити-класса
       Log.i("P", "positionService = " + positionService.getRandomNumber("America/Whitehorse.json"));
+
+      positionService.obs().subscribeOn(Schedulers.newThread())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(time -> {
+                Log.i("P", "obs()=" + time.getDateTime());
+              });
     }
 
     /*
