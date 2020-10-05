@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -74,12 +75,17 @@ public class MainActivity extends AppCompatActivity {
       //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
       //снижения производительности активити-класса
 
+
       timeService.getTimeObservable("America/Whitehorse.json")
               .subscribeOn(Schedulers.newThread())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(time -> {
                 Log.i("P", "obs() = " + time.getDateTime());
+              }, error -> {
+                Log.i("P", "obs() error");
               });
+
+
     }
 
     /*
@@ -109,17 +115,21 @@ public class MainActivity extends AppCompatActivity {
     NavigationUI.setupWithNavController(navView, navController);
 
 
-    TimeApiInterface timeApiService = TimeApiClient.getClientWithRx().create(TimeApiInterface.class);
+    TimeApiClient.getClientWithRx().create(TimeApiInterfaceWithRx.class);
+    /*
+    TimeApiInterfaceWithRx timeApiService = TimeApiClient.getClientWithRx().create(TimeApiInterfaceWithRx.class);
     compositeDisposable.add(timeApiService.getTimeWithRx("America/Whitehorse.json")
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(postMessage -> {
               sAccept = postMessage.getDateTime();
               Log.i("P", "sAccept rx= " + sAccept);
+            }, error -> {
+              Log.i("P", "error rx = " + error.getMessage());
             }));
+    */
 
-
-    TimeApiInterface timeApiService2 = TimeApiClient.getClientWithoutRx().create(TimeApiInterface.class);
+    TimeApiInterfaceWithoutRx timeApiService2 = TimeApiClient.getClientWithoutRx().create(TimeApiInterfaceWithoutRx.class);
     Call<Time> timeCall = timeApiService2.getTimeWithoutRx("Pacific/Majuro.json");
     timeCall.enqueue(new Callback<Time>() {
       @Override
@@ -201,8 +211,6 @@ public class MainActivity extends AppCompatActivity {
                 }
               }
             });
-
-
   }
 
   @Override
