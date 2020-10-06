@@ -9,7 +9,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -22,6 +21,11 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
+import alexrnov.worldtime.retrofit.Time;
+import alexrnov.worldtime.retrofit.standard.TimeApiClient;
+import alexrnov.worldtime.retrofit.rxjava.TimeApiClientRx;
+import alexrnov.worldtime.retrofit.standard.TimeApiInterface;
+import alexrnov.worldtime.retrofit.rxjava.TimeApiInterfaceRx;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
@@ -31,6 +35,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 //import okhttp3.Callback;
@@ -76,16 +81,16 @@ public class MainActivity extends AppCompatActivity {
       //снижения производительности активити-класса
 
 
-      timeService.getTimeObservable("America/Whitehorse.json")
+      Disposable subscribe = timeService.getTimeObservable("America/Whitehorse.json")
               .subscribeOn(Schedulers.newThread())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(time -> {
-                Log.i("P", "obs() = " + time.getDateTime());
+                Log.i("P", "obs = " + time.getDateTime());
               }, error -> {
-                Log.i("P", "obs() error");
+                Log.i("P", "obs error");
               });
 
-
+      compositeDisposable.add(subscribe);
     }
 
     /*
@@ -115,10 +120,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationUI.setupWithNavController(navView, navController);
 
 
-    TimeApiClient.getClientWithRx().create(TimeApiInterfaceWithRx.class);
-    /*
-    TimeApiInterfaceWithRx timeApiService = TimeApiClient.getClientWithRx().create(TimeApiInterfaceWithRx.class);
-    compositeDisposable.add(timeApiService.getTimeWithRx("America/Whitehorse.json")
+    TimeApiInterfaceRx timeApiService = TimeApiClientRx.getClient().create(TimeApiInterfaceRx.class);
+    Disposable subscribe = timeApiService.getTime("America/Whitehorse.json")
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(postMessage -> {
@@ -126,11 +129,13 @@ public class MainActivity extends AppCompatActivity {
               Log.i("P", "sAccept rx= " + sAccept);
             }, error -> {
               Log.i("P", "error rx = " + error.getMessage());
-            }));
-    */
+            });
 
-    TimeApiInterfaceWithoutRx timeApiService2 = TimeApiClient.getClientWithoutRx().create(TimeApiInterfaceWithoutRx.class);
-    Call<Time> timeCall = timeApiService2.getTimeWithoutRx("Pacific/Majuro.json");
+    compositeDisposable.add(subscribe);
+
+
+    TimeApiInterface timeApiService2 = TimeApiClient.getClient().create(TimeApiInterface.class);
+    Call<Time> timeCall = timeApiService2.getTime("Pacific/Majuro.json");
     timeCall.enqueue(new Callback<Time>() {
       @Override
       public void onResponse(Call<Time> call, Response<Time> response) {
@@ -173,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
               @Override
               public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
-
+                Log.i("P", "request onFailure");
               }
             });
 

@@ -1,8 +1,8 @@
-package alexrnov.worldtime;
+package alexrnov.worldtime.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 
-class Time {
+public class Time {
 
   @SerializedName("datetime")
   private String dateTime;

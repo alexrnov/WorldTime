@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
+import alexrnov.worldtime.retrofit.Time;
+import alexrnov.worldtime.retrofit.rxjava.TimeApiClientRx;
+import alexrnov.worldtime.retrofit.rxjava.TimeApiInterfaceRx;
 import io.reactivex.Observable;
 
 /** Привязанная служба, на основе использования расширенного класса Binder */
@@ -18,7 +21,7 @@ public class TimeService extends Service {
    * иметь дело с межпроцессорным взаимодействием.
    */
   public class LocalBinder extends Binder {
-    TimeService getService() {
+    public TimeService getService() {
       // Вернуть экземпляр службы клиенту, который может вызвать его public-методы
       return TimeService.this;
     }
@@ -26,8 +29,8 @@ public class TimeService extends Service {
 
   // метод, который может вызвать клиент
   public Observable<Time> getTimeObservable(String path) {
-    TimeApiInterfaceWithRx timeApiService = TimeApiClient.getClientWithRx().create(TimeApiInterfaceWithRx.class);
-    return timeApiService.getTimeWithRx(path);
+    TimeApiInterfaceRx timeApiService = TimeApiClientRx.getClient().create(TimeApiInterfaceRx.class);
+    return timeApiService.getTime(path);
   }
 
   // invoke when services are created by bindService()
