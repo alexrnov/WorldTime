@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
   private final OkHttpClient client = new OkHttpClient();
   private FusedLocationProviderClient fusedLocationClient;
 
-  private TimeService timeService;
+  private TimeService timeService;;;;;;;;
 
   boolean mBound = false;
 
