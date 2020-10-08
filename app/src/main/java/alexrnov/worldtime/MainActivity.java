@@ -1,5 +1,8 @@
 package alexrnov.worldtime;
 
+
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -200,22 +203,26 @@ public class MainActivity extends AppCompatActivity {
               new String [] { android.Manifest.permission.ACCESS_COARSE_LOCATION },
               1);
 
+    } else {
+
+      fusedLocationClient.getLastLocation()
+              .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                  Log.i("P", "location onSuccess");
+                  // Got last known location. In some rare situations this can be null.
+                  if (location != null) {
+                    // Logic to handle location object
+                    Log.i("P", "latitude = " + location.getLatitude()
+                            + "longitude = " + location.getLongitude());
+
+                  }
+                }
+              });
+
+
     }
 
-    fusedLocationClient.getLastLocation()
-            .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-              @Override
-              public void onSuccess(Location location) {
-                Log.i("P", "location onSuccess");
-                // Got last known location. In some rare situations this can be null.
-                if (location != null) {
-                  // Logic to handle location object
-                  Log.i("P", "latitude = " + location.getLatitude()
-                    + "longitude = " + location.getLongitude());
-
-                }
-              }
-            });
   }
 
   @Override
@@ -237,4 +244,45 @@ public class MainActivity extends AppCompatActivity {
       mBound = false;
     }
   }
-}
+
+  @SuppressLint("MissingPermission")
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+                                         @NotNull String[] permissions, int[] grantResults) {
+    Log.i("P", "requestCode = " + requestCode);
+    Log.i("P", "code = " + Manifest.permission.ACCESS_COARSE_LOCATION);
+    Log.i("P", "permission = " + permissions[0]);
+    if (permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+      if (grantResults.length > 0
+              && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        Log.i("P", "permission granted");
+
+
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                  @Override
+                  public void onSuccess(Location location) {
+                    Log.i("P", "location onSuccess");
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                      // Logic to handle location object
+                      Log.i("P", "latitude = " + location.getLatitude()
+                              + "longitude = " + location.getLongitude());
+
+                    }
+                  }
+                });
+
+
+
+      } else {
+        Log.i("P", "Permission denied");
+      }
+    }
+      // other 'case' lines to check for other
+      // permissions this app might request
+    }
+
+
+  }
