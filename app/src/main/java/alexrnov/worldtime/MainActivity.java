@@ -203,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
     locationClient = LocationServices.getFusedLocationProviderClient(this);
 
+    // required before get location
     if (ActivityCompat.checkSelfPermission(this,
             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -235,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  // request permission
   @SuppressLint("MissingPermission")
   @Override
   public void onRequestPermissionsResult(int requestCode,
