@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- for access to internet, - for retrofit -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Start it in foreground this is required for any app that target Android 9 (API level 28).
     Otherwise you get a SecurityException. Plus the permission in your manifest -->

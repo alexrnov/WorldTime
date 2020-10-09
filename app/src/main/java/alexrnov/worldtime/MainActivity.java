@@ -55,13 +55,26 @@ public class MainActivity extends AppCompatActivity {
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
   private final OkHttpClient client = new OkHttpClient();
-  private FusedLocationProviderClient fusedLocationClient;
+  private FusedLocationProviderClient locationClient;
 
   private TimeService timeService;
 
   boolean mBound = false;
 
   private String sAccept;
+
+  private OnSuccessListener<Location> locationListener = location -> {
+    // Got last known location. In some rare situations this can be null.
+    if (location != null) {
+      // Logic to handle location object
+      Log.i("P", "lat: " + location.getLatitude() + ", "
+              + "long: " + location.getLongitude());
+
+    } else {
+      Log.i("P", "location is null");
+    }
+  };
+
 
   //определяет обратный вызов для связанной службы, передаваемый в bindService()
   private ServiceConnection mConnection = new ServiceConnection() {
@@ -190,37 +203,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    locationClient = LocationServices.getFusedLocationProviderClient(this);
 
     if (ActivityCompat.checkSelfPermission(this,
             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      //Toast.makeText(YourService.this, "First enable LOCATION ACCESS in settings.", Toast.LENGTH_LONG).show();
-
-
       ActivityCompat.requestPermissions(
               this,
               new String [] { android.Manifest.permission.ACCESS_COARSE_LOCATION },
               1);
 
     } else {
-
-      fusedLocationClient.getLastLocation()
-              .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                  Log.i("P", "location onSuccess");
-                  // Got last known location. In some rare situations this can be null.
-                  if (location != null) {
-                    // Logic to handle location object
-                    Log.i("P", "latitude = " + location.getLatitude()
-                            + "longitude = " + location.getLongitude());
-
-                  }
-                }
-              });
-
-
+      locationClient.getLastLocation().addOnSuccessListener(this, locationListener);
     }
 
   }
@@ -248,41 +242,16 @@ public class MainActivity extends AppCompatActivity {
   @SuppressLint("MissingPermission")
   @Override
   public void onRequestPermissionsResult(int requestCode,
-                                         @NotNull String[] permissions, int[] grantResults) {
-    Log.i("P", "requestCode = " + requestCode);
-    Log.i("P", "code = " + Manifest.permission.ACCESS_COARSE_LOCATION);
-    Log.i("P", "permission = " + permissions[0]);
+                                         @NotNull String[] permissions, @NotNull int[] grantResults) {
     if (permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+      //permission granted
       if (grantResults.length > 0
               && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        Log.i("P", "permission granted");
-
-
-
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                  @Override
-                  public void onSuccess(Location location) {
-                    Log.i("P", "location onSuccess");
-                    // Got last known location. In some rare situations this can be null.
-                    if (location != null) {
-                      // Logic to handle location object
-                      Log.i("P", "latitude = " + location.getLatitude()
-                              + "longitude = " + location.getLongitude());
-
-                    }
-                  }
-                });
-
-
-
+        locationClient.getLastLocation().addOnSuccessListener(this, locationListener);
       } else {
         Log.i("P", "Permission denied");
       }
     }
-      // other 'case' lines to check for other
-      // permissions this app might request
-    }
-
-
   }
+  
+}
