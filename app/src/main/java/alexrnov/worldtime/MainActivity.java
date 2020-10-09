@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -200,23 +201,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
     locationClient = LocationServices.getFusedLocationProviderClient(this);
 
     if (ActivityCompat.checkSelfPermission(this,
             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      ActivityCompat.requestPermissions(
-              this,
-              new String [] { android.Manifest.permission.ACCESS_COARSE_LOCATION },
-              1);
-
+      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+        ActivityCompat.requestPermissions(
+                this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+      }
     } else {
       locationClient.getLastLocation().addOnSuccessListener(this, locationListener);
     }
-
   }
 
   @Override
@@ -243,14 +239,13 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode,
                                          @NotNull String[] permissions, @NotNull int[] grantResults) {
-    if (permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-      //permission granted
-      if (grantResults.length > 0
+    if (requestCode == 1) { // or permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION))
+      if (grantResults.length > 0 //permission granted
               && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
         locationClient.getLastLocation().addOnSuccessListener(this, locationListener);
-      } else {
-        Log.i("P", "Permission denied");
       }
+    } else {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
   }
 
