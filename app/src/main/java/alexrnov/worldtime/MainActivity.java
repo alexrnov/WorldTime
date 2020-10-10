@@ -14,8 +14,11 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationStatusCodes;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -201,8 +204,45 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    locationClient = LocationServices.getFusedLocationProviderClient(this);
+  }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    Log.i("P", "oneResume() method");
+    int googleServices = GoogleApiAvailability.getInstance()
+            .isGooglePlayServicesAvailable(getBaseContext());
+    switch(googleServices) {
+      case ConnectionResult.SUCCESS: {
+        Log.i("P", "googleService success"); break;
+      }
+      case ConnectionResult.SERVICE_MISSING: {
+        Log.i("P", "googleService missing"); break;
+      }
+      case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED: {
+        Log.i("P", "googleService update required"); break;
+      }
+      case ConnectionResult.SERVICE_DISABLED: {
+        Log.i("P", "googleService disabled"); break;
+      }
+      default: {
+        Log.i("P", "googleService not available"); break;
+      }
+    }
+
+
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    Log.i("P", "onStart() method");
+
+    Intent intent = new Intent(this, TimeService.class);
+    //BIND_AUTO_CREATE - параметр привязки: создать службу если она еще не выполняется
+    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+    locationClient = LocationServices.getFusedLocationProviderClient(this);
     // required before get location
     if (ActivityCompat.checkSelfPermission(this,
             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -216,22 +256,6 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-    Log.i("P", "oneResume() method");
-  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-    Log.i("P", "onStart() method");
-
-    Intent intent = new Intent(this, TimeService.class);
-    //BIND_AUTO_CREATE - параметр привязки: создать службу если она еще не выполняется
-    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-  }
-
   // Long-term operations (making network calls or performing database transactions)
   // must be performed in onStop()
   @Override
@@ -243,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
       mBound = false;
     }
     Log.i("P", "onStop() method");
+    locationClient = null;
   }
 
   // called when the permission request window is displayed
