@@ -217,6 +217,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onResume() {
+    super.onResume();
+    Log.i("P", "oneResume() method");
+  }
+
+  @Override
   protected void onStart() {
     super.onStart();
     Log.i("P", "onStart() method");
@@ -226,6 +232,8 @@ public class MainActivity extends AppCompatActivity {
     bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
   }
 
+  // Long-term operations (making network calls or performing database transactions)
+  // must be performed in onStop()
   @Override
   protected void onStop() {
     super.onStop();
@@ -234,6 +242,28 @@ public class MainActivity extends AppCompatActivity {
       unbindService(mConnection);
       mBound = false;
     }
+    Log.i("P", "onStop() method");
+  }
+
+  // called when the permission request window is displayed
+  @Override
+  protected void onPause() {
+    super.onPause();
+    Log.i("P", "onPause() method");
+  }
+
+  // here need release all resources that have not yet been released by earlier callbacks such as onStop().
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    Log.i("P", "onDestroy() method");
+  }
+
+  // call after onStop() if user return to app
+  @Override
+  protected void onRestart() {
+    super.onRestart();
+    Log.i("P", "onRestart() method");
   }
 
   // request permission
