@@ -11,6 +11,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.ConnectionResult.*
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnSuccessListener
@@ -32,11 +35,6 @@ class LocationObserver(
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun create() {
-        Log.i("P", "create lifecycle")
-    }
-
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
         Log.i("P", "start lifecycle")
@@ -51,7 +49,7 @@ class LocationObserver(
                         activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
             }
         } else {
-            locationClient?.getLastLocation()?.addOnSuccessListener(activity, locationListener)
+            locationClient?.lastLocation?.addOnSuccessListener(activity, locationListener)
         }
 
 
@@ -66,6 +64,13 @@ class LocationObserver(
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun resume() {
         Log.i("P", "resume lifecycle")
+        when (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)) {
+            SUCCESS -> Log.i("P", "googleService success")
+            SERVICE_MISSING -> Log.i("P", "googleService missing")
+            SERVICE_VERSION_UPDATE_REQUIRED -> Log.i("P", "googleService update required")
+            SERVICE_DISABLED -> Log.i("P", "googleService disabled")
+            else -> Log.i("P", "googleService not available")
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

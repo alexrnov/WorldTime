@@ -1,23 +1,13 @@
 package alexrnov.worldtime;
 
-
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,20 +22,16 @@ import alexrnov.worldtime.retrofit.rxjava.TimeApiClientRx;
 import alexrnov.worldtime.retrofit.standard.TimeApiInterface;
 import alexrnov.worldtime.retrofit.rxjava.TimeApiInterfaceRx;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import alexrnov.worldtime.ui.sun.LocationObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
-//import okhttp3.Callback;
-
 
 import alexrnov.worldtime.TimeService.LocalBinder;
 import okhttp3.Request;
@@ -86,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
       //было что-то, что могло привести к зависанию(длительной работы метода),
       //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
       //снижения производительности активити-класса
-
-
       Disposable subscribe = timeService.getTimeObservable("America/Whitehorse.json")
               .subscribeOn(Schedulers.newThread())
               .observeOn(AndroidSchedulers.mainThread())
@@ -195,27 +179,6 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     Log.i("P", "oneResume() method");
-    int googleServices = GoogleApiAvailability.getInstance()
-            .isGooglePlayServicesAvailable(getBaseContext());
-    switch(googleServices) {
-      case ConnectionResult.SUCCESS: {
-        Log.i("P", "googleService success"); break;
-      }
-      case ConnectionResult.SERVICE_MISSING: {
-        Log.i("P", "googleService missing"); break;
-      }
-      case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED: {
-        Log.i("P", "googleService update required"); break;
-      }
-      case ConnectionResult.SERVICE_DISABLED: {
-        Log.i("P", "googleService disabled"); break;
-      }
-      default: {
-        Log.i("P", "googleService not available"); break;
-      }
-    }
-
-
   }
 
   @Override
