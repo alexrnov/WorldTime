@@ -1,4 +1,4 @@
-package alexrnov.worldtime.ui.time;
+package alexrnov.worldtime.ui.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,17 +13,17 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import alexrnov.worldtime.R;
 
-public class HomeFragment extends Fragment {
+public class TuneFragment extends Fragment {
 
-  private HomeViewModel homeViewModel;
+  private TuneViewModel tuneViewModel;
 
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
-    homeViewModel =
-            ViewModelProviders.of(this).get(HomeViewModel.class);
-    View root = inflater.inflate(R.layout.fragment_home, container, false);
-    final TextView textView = root.findViewById(R.id.text_home);
-    homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+    tuneViewModel =
+            ViewModelProviders.of(this).get(TuneViewModel.class);
+    View root = inflater.inflate(R.layout.fragment_tune, container, false);
+    final TextView textView = root.findViewById(R.id.text_notifications);
+    tuneViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
       @Override
       public void onChanged(@Nullable String s) {
         textView.setText(s);

@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_time"
-        android:name="alexrnov.worldtime.ui.time.HomeFragment"
+        android:name="alexrnov.worldtime.ui.time.TimeFragment"
         android:label="@string/title_time"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_time" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="alexrnov.worldtime.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_sun"
+        android:name="alexrnov.worldtime.ui.dashboard.SunFragment"
+        android:label="@string/title_sun"
+        tools:layout="@layout/fragment_sun" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="alexrnov.worldtime.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_tune"
+        android:name="alexrnov.worldtime.ui.notifications.TuneFragment"
+        android:label="@string/title_tune"
+        tools:layout="@layout/fragment_tune" />
 </navigation>

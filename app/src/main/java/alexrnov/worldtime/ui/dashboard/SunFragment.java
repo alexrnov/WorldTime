@@ -1,4 +1,4 @@
-package alexrnov.worldtime.ui.notifications;
+package alexrnov.worldtime.ui.dashboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,17 +13,17 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import alexrnov.worldtime.R;
 
-public class NotificationsFragment extends Fragment {
+public class SunFragment extends Fragment {
 
-  private NotificationsViewModel notificationsViewModel;
+  private SunViewModel sunViewModel;
 
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
-    notificationsViewModel =
-            ViewModelProviders.of(this).get(NotificationsViewModel.class);
-    View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-    final TextView textView = root.findViewById(R.id.text_notifications);
-    notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+    sunViewModel =
+            ViewModelProviders.of(this).get(SunViewModel.class);
+    View root = inflater.inflate(R.layout.fragment_sun, container, false);
+    final TextView textView = root.findViewById(R.id.text_dashboard);
+    sunViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
       @Override
       public void onChanged(@Nullable String s) {
         textView.setText(s);
