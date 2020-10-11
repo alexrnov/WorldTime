@@ -1,4 +1,4 @@
-package alexrnov.worldtime.ui.notifications;
+package alexrnov.worldtime.ui.tune;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

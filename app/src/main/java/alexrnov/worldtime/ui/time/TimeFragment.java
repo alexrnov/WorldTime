@@ -1,6 +1,7 @@
 package alexrnov.worldtime.ui.time;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import alexrnov.worldtime.R;
 
 public class TimeFragment extends Fragment {
@@ -19,8 +20,8 @@ public class TimeFragment extends Fragment {
 
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
-    timeViewModel =
-            ViewModelProviders.of(this).get(TimeViewModel.class);
+
+    timeViewModel = new ViewModelProvider(this).get(TimeViewModel.class);
     View root = inflater.inflate(R.layout.fragment_time, container, false);
     final TextView textView = root.findViewById(R.id.text_home);
     timeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -31,4 +32,5 @@ public class TimeFragment extends Fragment {
     });
     return root;
   }
+
 }

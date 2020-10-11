@@ -38,6 +38,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import alexrnov.worldtime.ui.sun.LocationObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -57,27 +58,13 @@ public class MainActivity extends AppCompatActivity {
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
   private final OkHttpClient client = new OkHttpClient();
-  private FusedLocationProviderClient locationClient;
+
 
   private TimeService timeService;
 
   boolean mBound = false;
 
   private String sAccept;
-
-  private LocationObserver locationObserver;
-
-  private OnSuccessListener<Location> locationListener = location -> {
-    // Got last known location. In some rare situations this can be null.
-    if (location != null) {
-      // Logic to handle location object
-      Log.i("P", "lat: " + location.getLatitude() + ", "
-              + "long: " + location.getLongitude());
-
-    } else {
-      Log.i("P", "location is null");
-    }
-  };
 
 
   //определяет обратный вызов для связанной службы, передаваемый в bindService()
@@ -202,9 +189,6 @@ public class MainActivity extends AppCompatActivity {
               }
             });
 
-
-    locationObserver = new LocationObserver(this, getLifecycle(), locationListener);
-    getLifecycle().addObserver(locationObserver);
   }
 
   @Override
@@ -243,18 +227,6 @@ public class MainActivity extends AppCompatActivity {
     //BIND_AUTO_CREATE - параметр привязки: создать службу если она еще не выполняется
     bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-    locationClient = LocationServices.getFusedLocationProviderClient(this);
-    // required before get location
-    if (ActivityCompat.checkSelfPermission(this,
-            android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) { // required for Android M (SDK API 23+)
-        ActivityCompat.requestPermissions(
-                this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-      }
-    } else {
-      locationClient.getLastLocation().addOnSuccessListener(this, locationListener);
-    }
   }
 
   // Long-term operations (making network calls or performing database transactions)
@@ -268,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
       mBound = false;
     }
     Log.i("P", "onStop() method");
-    locationClient = null;
   }
 
   // called when the permission request window is displayed
@@ -290,21 +261,6 @@ public class MainActivity extends AppCompatActivity {
   protected void onRestart() {
     super.onRestart();
     Log.i("P", "onRestart() method");
-  }
-
-  // request permission
-  @SuppressLint("MissingPermission")
-  @Override
-  public void onRequestPermissionsResult(int requestCode,
-                                         @NotNull String[] permissions, @NotNull int[] grantResults) {
-    if (requestCode == 1) { // or permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION))
-      if (grantResults.length > 0 //permission granted
-              && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        locationClient.getLastLocation().addOnSuccessListener(this, locationListener);
-      }
-    } else {
-      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
   }
 
 }
