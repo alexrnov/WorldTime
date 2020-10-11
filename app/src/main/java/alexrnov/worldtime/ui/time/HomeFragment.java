@@ -1,4 +1,4 @@
-package alexrnov.worldtime.ui.home;
+package alexrnov.worldtime.ui.time;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
