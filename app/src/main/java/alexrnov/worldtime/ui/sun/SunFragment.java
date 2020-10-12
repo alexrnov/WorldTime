@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import alexrnov.worldtime.R;
 
 public class SunFragment extends Fragment {
@@ -52,6 +54,7 @@ public class SunFragment extends Fragment {
     if (requestCode == 1) { // or permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION))
       if (grantResults.length > 0 //permission granted
               && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        Log.i("P", "onRequestPermissionsResult2");
         locationObserver.getLocation();
       }
     } else {

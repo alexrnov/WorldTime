@@ -1,15 +1,13 @@
 package alexrnov.worldtime.ui.sun
 
-import alexrnov.worldtime.MainActivity
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -20,7 +18,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnSuccessListener
 
 class LocationObserver(
-        private val sunFragment: SunFragment,
+        private val fragment: Fragment,
         private val lifecycle: Lifecycle) : LifecycleObserver {
 
     private var locationClient: FusedLocationProviderClient? = null
@@ -41,7 +39,7 @@ class LocationObserver(
         // check for a specific state. Since multiple states can interleave for a given point
         // of time, if we want to check for a specific state, we always use the isAtLeast method
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            locationClient?.lastLocation?.addOnSuccessListener(sunFragment.requireActivity(), locationListener)
+            locationClient?.lastLocation?.addOnSuccessListener(fragment.requireActivity(), locationListener)
             Log.i("P", "location started")
         } else {
             Log.i("P", "location not started")
@@ -50,20 +48,18 @@ class LocationObserver(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
-        Log.i("P", "start lifecycle")
-
-        locationClient = LocationServices.getFusedLocationProviderClient(sunFragment.requireActivity())
+        locationClient = LocationServices.getFusedLocationProviderClient(fragment.requireActivity())
         // required before get location
-        if (ActivityCompat.checkSelfPermission(sunFragment.requireContext(),
+        if (ActivityCompat.checkSelfPermission(fragment.requireContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(sunFragment.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                && ActivityCompat.checkSelfPermission(fragment.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) { // required for Android M (SDK API 23+)
                 //ActivityCompat.requestPermissions( // if invoked from activity
                        // activity!!, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
-                sunFragment.requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+                fragment.requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
             }
         } else { // when permission is present (on repeated calls)
-            locationClient?.lastLocation?.addOnSuccessListener(sunFragment.requireActivity(), locationListener)
+            locationClient?.lastLocation?.addOnSuccessListener(fragment.requireActivity(), locationListener)
         }
     }
 
@@ -76,7 +72,7 @@ class LocationObserver(
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun resume() {
         Log.i("P", "resume lifecycle")
-        when (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(sunFragment.requireContext())) {
+        when (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(fragment.requireContext())) {
             SUCCESS -> Log.i("P", "googleService success")
             SERVICE_MISSING -> Log.i("P", "googleService missing")
             SERVICE_VERSION_UPDATE_REQUIRED -> Log.i("P", "googleService update required")
