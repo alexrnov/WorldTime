@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_time"
-        android:icon="@drawable/ic_time_24dp"
-        android:title="@string/title_time" />
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_24dp"
+        android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_tune"
-        android:icon="@drawable/ic_tune_24dp"
-        android:title="@string/title_tune" />
+        android:id="@+id/navigation_list"
+        android:icon="@drawable/ic_list_24dp"
+        android:title="@string/title_list" />
 
     <item
         android:id="@+id/navigation_sun"

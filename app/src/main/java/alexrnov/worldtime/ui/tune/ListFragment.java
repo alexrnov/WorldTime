@@ -13,16 +13,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import alexrnov.worldtime.R;
 
-public class TuneFragment extends Fragment {
+public class ListFragment extends Fragment {
 
-  private TuneViewModel tuneViewModel;
+  private ListViewModel listViewModel;
 
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
-    tuneViewModel = new ViewModelProvider(this).get(TuneViewModel.class);
-    View root = inflater.inflate(R.layout.fragment_tune, container, false);
+    listViewModel = new ViewModelProvider(this).get(ListViewModel.class);
+    View root = inflater.inflate(R.layout.fragment_list, container, false);
     final TextView textView = root.findViewById(R.id.text_notifications);
-    tuneViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+    listViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
       @Override
       public void onChanged(@Nullable String s) {
         textView.setText(s);

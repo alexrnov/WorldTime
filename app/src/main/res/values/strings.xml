@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">World Time</string>
-    <string name="title_time">Time</string>
+    <string name="title_home">Home</string>
+    <string name="title_list">List</string>
     <string name="title_sun">Sun</string>
-    <string name="title_tune">Tune</string>
 </resources>

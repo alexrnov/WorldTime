@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -16,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.List;
 
 import alexrnov.worldtime.retrofit.Time;
 import alexrnov.worldtime.retrofit.standard.TimeApiClient;
@@ -24,13 +22,11 @@ import alexrnov.worldtime.retrofit.rxjava.TimeApiClientRx;
 import alexrnov.worldtime.retrofit.standard.TimeApiInterface;
 import alexrnov.worldtime.retrofit.rxjava.TimeApiInterfaceRx;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import alexrnov.worldtime.ui.sun.LocationObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -108,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     // Passing each menu ID as a set of Ids because each
     // menu should be considered as top level destinations.
     AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-            R.id.navigation_time, R.id.navigation_sun, R.id.navigation_tune)
+            R.id.navigation_home, R.id.navigation_sun, R.id.navigation_list)
             .build();
     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
     NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
