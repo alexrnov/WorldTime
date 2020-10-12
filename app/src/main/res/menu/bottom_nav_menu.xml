@@ -7,13 +7,13 @@
         android:title="@string/title_time" />
 
     <item
-        android:id="@+id/navigation_sun"
-        android:icon="@drawable/ic_sun_24dp"
-        android:title="@string/title_sun" />
-
-    <item
         android:id="@+id/navigation_tune"
         android:icon="@drawable/ic_tune_24dp"
         android:title="@string/title_tune" />
+
+    <item
+        android:id="@+id/navigation_sun"
+        android:icon="@drawable/ic_sun_24dp"
+        android:title="@string/title_sun" />
 
 </menu>

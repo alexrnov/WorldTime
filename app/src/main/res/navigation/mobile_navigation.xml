@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_time" />
 
     <fragment
-        android:id="@+id/navigation_sun"
-        android:name="alexrnov.worldtime.ui.sun.SunFragment"
-        android:label="@string/title_sun"
-        tools:layout="@layout/fragment_sun" />
-
-    <fragment
         android:id="@+id/navigation_tune"
         android:name="alexrnov.worldtime.ui.tune.TuneFragment"
         android:label="@string/title_tune"
         tools:layout="@layout/fragment_tune" />
+
+    <fragment
+        android:id="@+id/navigation_sun"
+        android:name="alexrnov.worldtime.ui.sun.SunFragment"
+        android:label="@string/title_sun"
+        tools:layout="@layout/fragment_sun" />
 </navigation>

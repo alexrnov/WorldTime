@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -15,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.List;
 
 import alexrnov.worldtime.retrofit.Time;
 import alexrnov.worldtime.retrofit.standard.TimeApiClient;
@@ -22,11 +24,13 @@ import alexrnov.worldtime.retrofit.rxjava.TimeApiClientRx;
 import alexrnov.worldtime.retrofit.standard.TimeApiInterface;
 import alexrnov.worldtime.retrofit.rxjava.TimeApiInterfaceRx;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import alexrnov.worldtime.ui.sun.LocationObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -45,13 +49,13 @@ public class MainActivity extends AppCompatActivity {
 
   private final OkHttpClient client = new OkHttpClient();
 
+  private boolean locationPermissionGranted = false;
 
   private TimeService timeService;
 
   boolean mBound = false;
 
   private String sAccept;
-
 
   //определяет обратный вызов для связанной службы, передаваемый в bindService()
   private ServiceConnection mConnection = new ServiceConnection() {
@@ -142,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
     });
 
 
-
     Request request = new Request.Builder()
             //.url("http://worldtimeapi.org/api/timezone.txt")
             .url("http://worldtimeapi.org/api/timezone.json")
@@ -226,4 +229,10 @@ public class MainActivity extends AppCompatActivity {
     Log.i("P", "onRestart() method");
   }
 
+  // request permission (required for invoke onRequestPermissionsResult in fragment)
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+                                         @NotNull String[] permissions, @NotNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  }
 }

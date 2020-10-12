@@ -1,6 +1,5 @@
 package alexrnov.worldtime.ui.sun;
 
-import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.jetbrains.annotations.NotNull;
 
+import alexrnov.worldtime.MainActivity;
 import alexrnov.worldtime.R;
 
 public class SunFragment extends Fragment {
@@ -40,24 +40,24 @@ public class SunFragment extends Fragment {
       }
     });
 
-    locationObserver = new LocationObserver(this.getContext(), this.getActivity(), getLifecycle());
+    locationObserver = new LocationObserver(this.getContext(), this.getActivity(), this, getLifecycle());
     getLifecycle().addObserver(locationObserver);
 
     return root;
   }
 
-  // request permission
-  @SuppressLint("MissingPermission")
+  // request location permission
   @Override
   public void onRequestPermissionsResult(int requestCode,
                                          @NotNull String[] permissions, @NotNull int[] grantResults) {
     if (requestCode == 1) { // or permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION))
       if (grantResults.length > 0 //permission granted
               && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        //locationClient.getLastLocation().addOnSuccessListener(this.getActivity(), locationListener);
+        locationObserver.getLocation();
       }
     } else {
       super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
   }
+
 }

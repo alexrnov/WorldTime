@@ -1,6 +1,8 @@
 package alexrnov.worldtime.ui.sun
 
+import alexrnov.worldtime.MainActivity
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -11,7 +13,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.ConnectionResult.*
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -20,7 +21,8 @@ import com.google.android.gms.tasks.OnSuccessListener
 
 class LocationObserver(
         private val context: Context,
-        private val activity: FragmentActivity,
+        private var activity: FragmentActivity?,
+        private val sunFragment: SunFragment,
         private val lifecycle: Lifecycle) : LifecycleObserver {
 
     private var locationClient: FusedLocationProviderClient? = null
@@ -35,24 +37,38 @@ class LocationObserver(
         }
     }
 
+    // because permission was granted, we can set annotation "MissingPermission"
+    @SuppressLint("MissingPermission")
+    fun getLocation() {
+        // check for a specific state. Since multiple states can interleave for a given point
+        // of time, if we want to check for a specific state, we always use the isAtLeast method
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+            locationClient?.lastLocation?.addOnSuccessListener(activity!!, locationListener)
+            Log.i("P", "location started")
+        } else {
+            Log.i("P", "location not started")
+        }
+    }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
         Log.i("P", "start lifecycle")
 
-        locationClient = LocationServices.getFusedLocationProviderClient(activity)
+        locationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         // required before get location
         if (ActivityCompat.checkSelfPermission(context,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) { // required for Android M (SDK API 23+)
-                ActivityCompat.requestPermissions(
-                        activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+                //activity.setLocationObserver(this)
+                //ActivityCompat.requestPermissions(
+                       // activity!!, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+                //activity!!.requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+                sunFragment.requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
             }
-        } else {
-            locationClient?.lastLocation?.addOnSuccessListener(activity, locationListener)
+        } else { // when permission is present (on repeated calls)
+            locationClient?.lastLocation?.addOnSuccessListener(activity!!, locationListener)
         }
-
-
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -76,5 +92,6 @@ class LocationObserver(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun destroy() {
         Log.i("P", "destroy lifecycle")
+        activity = null
     }
 }
