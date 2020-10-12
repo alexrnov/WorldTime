@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.jetbrains.annotations.NotNull;
 
-import alexrnov.worldtime.MainActivity;
 import alexrnov.worldtime.R;
 
 public class SunFragment extends Fragment {
@@ -40,13 +39,13 @@ public class SunFragment extends Fragment {
       }
     });
 
-    locationObserver = new LocationObserver(this.getContext(), this.getActivity(), this, getLifecycle());
+    locationObserver = new LocationObserver(this, getLifecycle());
     getLifecycle().addObserver(locationObserver);
 
     return root;
   }
 
-  // request location permission
+  // request location permission handler
   @Override
   public void onRequestPermissionsResult(int requestCode,
                                          @NotNull String[] permissions, @NotNull int[] grantResults) {

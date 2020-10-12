@@ -93,7 +93,7 @@ dependencies {
 
     // tool for find memory leak
     debugImplementation group: 'com.squareup.leakcanary', name: 'leakcanary-android', version: '2.5' // for memory leak tool
-    releaseImplementation group: 'com.squareup.leakcanary', name: 'leakcanary-android', version: '2.5' // for memory leak tool
+    // releaseImplementation group: 'com.squareup.leakcanary', name: 'leakcanary-android', version: '2.5' // for memory leak tool
 
 
 }
