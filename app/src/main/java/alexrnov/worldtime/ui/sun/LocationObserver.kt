@@ -86,5 +86,6 @@ class LocationObserver(
         fragment = null // avoid memory leak
         // add comment
         // add comment2    
+        // add comment3    
     }
 }
