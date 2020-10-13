@@ -43,57 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-  private final OkHttpClient client = new OkHttpClient();
+  //private TimeService timeService;
 
-  private boolean locationPermissionGranted = false;
-
-  private TimeService timeService;
-
-  boolean mBound = false;
+  //boolean mBound = false;
 
   private String sAccept;
-
-  //определяет обратный вызов для связанной службы, передаваемый в bindService()
-  private ServiceConnection mConnection = new ServiceConnection() {
-
-    /*
-     * Система вызывает этот метод, чтобы выдать объект IBinder, возвращенный
-     * методом onBind() службы.
-     */
-    @Override
-    public void onServiceConnected(ComponentName className, IBinder service) {
-      Log.i("P", "onServiceConnected init");
-      //мы получаем связь с Service3, преобразуем интерфейс IBinder в LocalBinder
-      //и получаем экземпляр Service3
-      LocalBinder binder = (LocalBinder) service;
-      timeService = binder.getService();
-      mBound = true;
-      //вызывается public-метод связанной службы. Однако если c этим вызовом
-      //было что-то, что могло привести к зависанию(длительной работы метода),
-      //тогда этот запрос должен происходить в отдельном потоке, чтобы избежать
-      //снижения производительности активити-класса
-      Disposable subscribe = timeService.getTimeObservable("America/Whitehorse.json")
-              .subscribeOn(Schedulers.newThread())
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribe(time -> {
-                Log.i("P", "obs = " + time.getDateTime());
-              }, error -> {
-                Log.i("P", "obs error");
-              });
-
-      compositeDisposable.add(subscribe);
-    }
-
-    /*
-     * Система Android вызывает этот метод в случае непредвиденной потери
-     * подключения к службе, например при сбое в работе службы или в случае
-     * ее завершения. Этот метод не вызывается, когда клиент отменяет привязку
-     */
-    @Override
-    public void onServiceDisconnected(ComponentName arg0) {
-      mBound = false;
-    }
-  };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -140,38 +94,6 @@ public class MainActivity extends AppCompatActivity {
         Log.i("P", "Response failure= " + t.toString());
       }
     });
-
-
-    Request request = new Request.Builder()
-            //.url("http://worldtimeapi.org/api/timezone.txt")
-            .url("http://worldtimeapi.org/api/timezone.json")
-            .build();
-
-    client.newCall(request).enqueue(
-            new okhttp3.Callback() {
-              @Override
-              public void onResponse(@NotNull okhttp3.Call call,
-                                     @NotNull okhttp3.Response response) throws IOException {
-                String str = response.body().string();
-
-                JSONArray jsonarray;
-                try {
-                  jsonarray = new JSONArray(str);
-                  for (int i = 0; i < jsonarray.length(); i++) {
-                    Object jsonArray = jsonarray.get(i);
-                    Log.i("P", "time zone = " + jsonArray.toString());
-                  }
-                } catch (JSONException e) {
-                  e.printStackTrace();
-                }
-              }
-
-              @Override
-              public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
-                Log.i("P", "request onFailure");
-              }
-            });
-
   }
 
   @Override
@@ -185,9 +107,9 @@ public class MainActivity extends AppCompatActivity {
     super.onStart();
     Log.i("P", "onStart() method");
 
-    Intent intent = new Intent(this, TimeService.class);
+    //Intent intent = new Intent(this, TimeService.class);
     //BIND_AUTO_CREATE - параметр привязки: создать службу если она еще не выполняется
-    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    //bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
   }
 
@@ -197,10 +119,10 @@ public class MainActivity extends AppCompatActivity {
   protected void onStop() {
     super.onStop();
     //открепиться от сервиса
-    if (mBound) {
-      unbindService(mConnection);
-      mBound = false;
-    }
+    //if (mBound) {
+      //unbindService(mConnection);
+      //mBound = false;
+    //}
     Log.i("P", "onStop() method");
   }
 

@@ -13,7 +13,6 @@ import io.reactivex.Observable;
 /** Привязанная служба, на основе использования расширенного класса Binder */
 public class TimeService extends Service {
   private final IBinder binder = new LocalBinder();
-  //TimeApiInterfaceWithRx timeApiService = TimeApiClient.getClientWithRx().create(TimeApiInterfaceWithRx.class);
 
   /*
    * Класс используется для связи с клиентом. Так как служба всегда
