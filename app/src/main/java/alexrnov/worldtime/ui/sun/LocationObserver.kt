@@ -85,5 +85,6 @@ class LocationObserver(
     fun destroy() {
         fragment = null // avoid memory leak
         // add comment
+        // add comment2    
     }
 }
