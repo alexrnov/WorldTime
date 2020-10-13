@@ -1,4 +1,4 @@
-package alexrnov.worldtime.ui.time;
+package alexrnov.worldtime.ui.list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,17 +13,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import alexrnov.worldtime.R;
 
-public class HomeFragment extends Fragment {
+public class ListFragment extends Fragment {
 
-  private HomeViewModel homeViewModel;
+  private ListViewModel listViewModel;
 
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
-
-    homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-    View root = inflater.inflate(R.layout.fragment_home, container, false);
-    final TextView textView = root.findViewById(R.id.text_home);
-    homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+    listViewModel = new ViewModelProvider(this).get(ListViewModel.class);
+    View root = inflater.inflate(R.layout.fragment_list, container, false);
+    final TextView textView = root.findViewById(R.id.text_notifications);
+    listViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
       @Override
       public void onChanged(@Nullable String s) {
         textView.setText(s);
@@ -31,5 +30,4 @@ public class HomeFragment extends Fragment {
     });
     return root;
   }
-
 }

@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="alexrnov.worldtime.ui.time.HomeFragment"
+        android:name="alexrnov.worldtime.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_list"
-        android:name="alexrnov.worldtime.ui.tune.ListFragment"
+        android:name="alexrnov.worldtime.ui.list.ListFragment"
         android:label="@string/title_list"
         tools:layout="@layout/fragment_list" />
 
