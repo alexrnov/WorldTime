@@ -84,8 +84,5 @@ class LocationObserver(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun destroy() {
         fragment = null // avoid memory leak
-        // add comment
-        // add comment2    
-        // add comment3    
     }
 }
