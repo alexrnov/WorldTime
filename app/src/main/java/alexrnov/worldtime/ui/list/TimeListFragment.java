@@ -1,6 +1,7 @@
 package alexrnov.worldtime.ui.list;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,13 +42,17 @@ public class TimeListFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext());
     recyclerView.setLayoutManager(layoutManager);
 
-    timeListViewModel.loadListFromServer();
+    //timeListViewModel.loadListFromServer();
+
+    //timeListViewModel.loadListFromServer();
 
     timeListViewModel.getTimeList().observe(getViewLifecycleOwner(), items -> {
+      Log.i("P", "view items = " + items.size());
       adapter = new TimeListAdapter(items);
       recyclerView.setAdapter(adapter);
     });
 
+    timeListViewModel.loadListFromServer();
 
     timeListObserver = new TimeListObserver(timeListViewModel);
     getLifecycle().addObserver(timeListObserver);
