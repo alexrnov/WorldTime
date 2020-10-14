@@ -17,11 +17,19 @@ import okhttp3.Request;
 
 class TimeListObserver implements LifecycleObserver {
 
+    private TimeListViewModel timeListViewModel;
+
+    public TimeListObserver(TimeListViewModel timeListViewModel) {
+        this.timeListViewModel = timeListViewModel;
+    }
+
     private OkHttpClient client;
     private okhttp3.Callback callback;
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     void start() {
+        timeListViewModel.loadListFromServer();
+        /*
         client = new OkHttpClient();
         Request request = new Request.Builder()
                 //.url("http://worldtimeapi.org/api/timezone.txt")
@@ -29,12 +37,14 @@ class TimeListObserver implements LifecycleObserver {
                 .build();
         callback = getCallback();
         client.newCall(request).enqueue(callback);
+
+         */
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     void stop() {
-        client = null;
-        callback = null;
+        //client = null;
+        //callback = null;
     }
 
     private okhttp3.Callback getCallback() {

@@ -34,8 +34,7 @@ public class TimeListFragment extends Fragment {
     View root = inflater.inflate(R.layout.fragment_list, container, false);
 
 
-    timeListObserver = new TimeListObserver();
-    getLifecycle().addObserver(timeListObserver);
+
 
     RecyclerView recyclerView = root.findViewById(R.id.time_list_recyclerview);
     recyclerView.setHasFixedSize(true);
@@ -50,7 +49,8 @@ public class TimeListFragment extends Fragment {
     });
 
 
-
+    timeListObserver = new TimeListObserver(timeListViewModel);
+    getLifecycle().addObserver(timeListObserver);
 
     return root;
   }
