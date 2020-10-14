@@ -7,4 +7,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TimeListItems" parent = "@android:style/TextAppearance">
+        <item name="android:textSize">@dimen/item_time_list_text_size</item>
+        <item name="android:textColor">@color/item_time_list_text_color</item>
+    </style>
+
 </resources>
