@@ -14,7 +14,7 @@ class TimeListObserver implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     void start() {
-        //timeListViewModel.loadListFromServer();
+        timeListViewModel.loadListFromServer();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

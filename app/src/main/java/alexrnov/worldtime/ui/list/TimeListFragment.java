@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alexrnov.worldtime.R;
-
+import static alexrnov.worldtime.ApplicationUtilsKt.showSnackBar;
 
 public class TimeListFragment extends Fragment {
 
@@ -42,17 +42,19 @@ public class TimeListFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext());
     recyclerView.setLayoutManager(layoutManager);
 
-    //timeListViewModel.loadListFromServer();
-
-    //timeListViewModel.loadListFromServer();
-
     timeListViewModel.getTimeList().observe(getViewLifecycleOwner(), items -> {
-      Log.i("P", "view items = " + items.size());
-      adapter = new TimeListAdapter(items);
-      recyclerView.setAdapter(adapter);
+      List<String> cp1 = items.component1();
+      Error er = items.component2();
+      Log.i("P", "cp1 = " + cp1 + ", er = " + er);
+      if (items.component1() != null) {
+        adapter = new TimeListAdapter(items.component1());
+        recyclerView.setAdapter(adapter);
+      } else {
+        if (items.component2() != null) {
+          showSnackBar(this.requireView(), "failed to load data");
+        }
+      }
     });
-
-    timeListViewModel.loadListFromServer();
 
     timeListObserver = new TimeListObserver(timeListViewModel);
     getLifecycle().addObserver(timeListObserver);
