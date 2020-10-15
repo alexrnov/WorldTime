@@ -34,24 +34,18 @@ public class TimeListFragment extends Fragment {
     timeListViewModel = new ViewModelProvider(this).get(TimeListViewModel.class);
     View root = inflater.inflate(R.layout.fragment_list, container, false);
 
-
-
-
     RecyclerView recyclerView = root.findViewById(R.id.time_list_recyclerview);
     recyclerView.setHasFixedSize(true);
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext());
     recyclerView.setLayoutManager(layoutManager);
 
     timeListViewModel.getTimeList().observe(getViewLifecycleOwner(), items -> {
-      List<String> cp1 = items.component1();
-      Error er = items.component2();
-      Log.i("P", "cp1 = " + cp1 + ", er = " + er);
       if (items.component1() != null) {
         adapter = new TimeListAdapter(items.component1());
         recyclerView.setAdapter(adapter);
       } else {
         if (items.component2() != null) {
-          showSnackBar(this.requireView(), "failed to load data");
+          showSnackBar(this.requireView(), getString(R.string.error_load_data));
         }
       }
     });

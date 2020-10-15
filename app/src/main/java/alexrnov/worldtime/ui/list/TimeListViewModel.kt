@@ -4,6 +4,10 @@ import alexrnov.worldtime.model.Repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TimeListViewModel : ViewModel() {
 
@@ -13,6 +17,12 @@ class TimeListViewModel : ViewModel() {
     fun getTimeList(): LiveData<Pair<List<String>?, Error?>> = time
 
     fun loadListFromServer() {
+        viewModelScope.launch {
+            loadList()
+        }
+    }
+
+    private suspend fun loadList() = withContext(Dispatchers.Default) {
         repository.getRepositories { repos, error ->
             time.postValue(Pair(repos, error))
         }
