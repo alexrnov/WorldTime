@@ -1,10 +1,13 @@
 package alexrnov.worldtime.model
 
+import android.content.Context
 import android.util.Log
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Repository modules handle data operations. They provide a clean API so that the rest of
@@ -12,7 +15,10 @@ import java.io.IOException
  * API calls to make when data is updated. You can consider repositories to be mediators
  * between different data sources, such as persistent models, web services, and caches.
  */
-class Repository {
+// @Inject lets Dagger know how to create instances of this object
+// Scope this class to a component using @Singleton scope (i.e. ApplicationGraph)
+@Singleton
+class Repository @Inject constructor(val context: Context) {
 
     fun getRepositories(completion: (List<String>?, Error?) -> Unit) {
 

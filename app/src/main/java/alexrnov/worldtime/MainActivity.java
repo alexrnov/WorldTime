@@ -1,21 +1,13 @@
 package alexrnov.worldtime;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
 
-import java.io.IOException;
-
+import alexrnov.worldtime.model.ActivityComponent;
 import alexrnov.worldtime.retrofit.Time;
 import alexrnov.worldtime.retrofit.standard.TimeApiClient;
 import alexrnov.worldtime.retrofit.rxjava.TimeApiClientRx;
@@ -31,10 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.OkHttpClient;
 
-import alexrnov.worldtime.TimeService.LocalBinder;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,10 +38,29 @@ public class MainActivity extends AppCompatActivity {
 
   private String sAccept;
 
+
+  // Reference to the Login graph. Notice that the variable loginComponent is not
+  // annotated with @Inject because you're not expecting that variable to be provided by Dagger.
+  // LoginComponent is created in the activity's onCreate() method, and it'll get implicitly destroyed when the activity gets destroyed.
+  public ActivityComponent activityComponent;
+
+  // When using activities, inject Dagger in the activity's onCreate() method
+  // before calling super.onCreate() to avoid issues with fragment restoration.
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+
+    // creation of the login graph using the application graph
+    activityComponent = ((Initialization) getApplicationContext()).applicationComponent.activityComponent().create();
+    // make Dagger instantiate @Inject fields in MainActivity
+    activityComponent.inject(this);
+
+
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+
+
+
     Log.i("P", "onCreate() method");
     BottomNavigationView navView = findViewById(R.id.nav_view);
     // Passing each menu ID as a set of Ids because each

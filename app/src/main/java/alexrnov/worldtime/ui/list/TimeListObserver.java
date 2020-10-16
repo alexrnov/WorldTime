@@ -19,6 +19,7 @@ class TimeListObserver implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     void stop() {
+        timeListViewModel = null;
     }
 
 }
