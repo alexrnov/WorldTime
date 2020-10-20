@@ -1,6 +1,7 @@
 package alexrnov.worldtime.model
 
 import alexrnov.worldtime.MainActivity
+import alexrnov.worldtime.ui.home.HomeFragment
 import alexrnov.worldtime.ui.list.TimeListFragment
 import android.content.Context
 import dagger.Component
@@ -75,7 +76,7 @@ interface ActivityComponent {
      component with their exact type. MainActivity and PageContentFragment request injection from ActivityComponent.
      */
 
-    fun inject(timeListFragment: TimeListFragment)
     fun inject(mainActivity: MainActivity)
-
+    fun inject(timeListFragment: TimeListFragment)
+    fun inject(homeFragment: HomeFragment)
 }

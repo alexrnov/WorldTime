@@ -28,8 +28,7 @@ import static alexrnov.worldtime.ApplicationUtilsKt.showSnackBar;
 public class TimeListFragment extends Fragment {
 
   // fields that need to be injected by the login graph
-  @Inject
-  TimeListViewModel timeListViewModel;
+  @Inject TimeListViewModel timeListViewModel;
 
   private TimeListObserver timeListObserver;
 
@@ -39,7 +38,6 @@ public class TimeListFragment extends Fragment {
   // In this case, it can be done before or after calling super.onAttach().
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
-
     // obtaining the activity graph from MainActivity and instantiate
     // the @Inject fields with objects from the graph
     MainActivity mainActivity = (MainActivity) getActivity();
@@ -54,7 +52,6 @@ public class TimeListFragment extends Fragment {
                            ViewGroup container, Bundle savedInstanceState) {
     //timeListViewModel = new ViewModelProvider(this).get(TimeListViewModel.class);
     View root = inflater.inflate(R.layout.fragment_list, container, false);
-
     RecyclerView recyclerView = root.findViewById(R.id.time_list_recyclerview);
     recyclerView.setHasFixedSize(true);
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext());
@@ -77,11 +74,6 @@ public class TimeListFragment extends Fragment {
 
 
     return root;
-  }
-
-  public void onStart() {
-    super.onStart();
-    timeListViewModel.loadListFromServer();
   }
 
 }

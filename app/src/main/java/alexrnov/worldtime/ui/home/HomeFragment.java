@@ -17,6 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
+import javax.inject.Inject;
+
+import alexrnov.worldtime.MainActivity;
 import alexrnov.worldtime.R;
 import alexrnov.worldtime.TimeService;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -26,16 +30,31 @@ import io.reactivex.schedulers.Schedulers;
 
 public class HomeFragment extends Fragment {
 
-  private HomeViewModel homeViewModel;
+  @Inject HomeViewModel homeViewModel;
 
   private TimeService timeService;
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
   boolean bound = false;
 
+  // when using fragments, inject Dagger in the fragment's onAttach() method.
+  // In this case, it can be done before or after calling super.onAttach().
+  @Override
+  public void onAttach(@NonNull Context context) {
+      super.onAttach(context);
+      // obtaining the activity graph from MainActivity and instantiate
+      // the @Inject fields with objects from the graph
+      MainActivity mainActivity = (MainActivity) getActivity();
+      if (mainActivity != null) {
+          mainActivity.activityComponent.inject(this);
+      }
+      // now access PageViewModel here and onCreateView too
+      // (shared instance with the Activity and the other Fragment)
+  }
+
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
 
-    homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+    //homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
     View root = inflater.inflate(R.layout.fragment_home, container, false);
     final TextView textView = root.findViewById(R.id.text_home);
     homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

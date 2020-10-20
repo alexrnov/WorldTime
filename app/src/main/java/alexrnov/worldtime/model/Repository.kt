@@ -52,4 +52,10 @@ class Repository @Inject constructor(val context: Context) {
             }
         })
     }
+
+    fun print() {
+        Log.i("P", "print repository")
+    }
+
+
 }
