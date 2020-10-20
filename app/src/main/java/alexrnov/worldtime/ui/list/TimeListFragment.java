@@ -68,8 +68,8 @@ public class TimeListFragment extends Fragment {
       }
     });
 
-    //timeListObserver = new TimeListObserver(timeListViewModel);
-    //getLifecycle().addObserver(timeListObserver);
+    timeListObserver = new TimeListObserver(timeListViewModel);
+    getLifecycle().addObserver(timeListObserver);
 
 
 
